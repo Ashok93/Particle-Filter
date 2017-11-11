@@ -5,12 +5,13 @@
 
 #include "robot.h"
 
-Robot::Robot(double _x, double _y, double _orientation, double _world_size)
+Robot::Robot(double _x, double _y, double _orientation, int _world_size, std::vector<std::vector<double>> _landmarks)
 {
     x = _x;
     y = _y;
     orientation = _orientation;
     world_size = _world_size;
+    landmarks = _landmarks;
 }
 
 std::vector<double> Robot::get_pose()
@@ -36,13 +37,40 @@ void Robot::set_noise(double _f_noise, double _t_noise, double _s_noise)
 
 void Robot::move(double turn, double forward)
 {
-    //turn the robot
-    orientation = orientation + turn;
+    // Add turn noise and turn the robot
+    std::normal_distribution<double> t_dis(0.0, t_noise);
+    double t_noise_value = t_dis(generator);
+    orientation = orientation + turn + t_noise_value;
     orientation = fmod(orientation,(2 * PI));
 
-    //move the robot
-    x = x + cos(orientation) * forward;
-    y = y + sin(orientation) * forward;
+    // Add move noise and move the robot
+    std::normal_distribution<double> f_dis(0.0, f_noise);
+    double f_noise_value = f_dis(generator);
+    x = x + cos(orientation) * (forward + f_noise_value);
+    y = y + sin(orientation) * (forward + f_noise_value);
+
+    x = fmod(x, world_size);
+    y = fmod(y, world_size);
+}
+
+std::vector<double> Robot::sense_landmarks()
+{
+    std::vector<double> distances;
+
+    for(auto const &landmark: landmarks)
+    {
+        double distance;
+        distance = std::sqrt(std::pow(x-landmark[0], 2) + std::pow(y-landmark[1], 2));
+
+        // adding sensor noise
+        std::normal_distribution<double> s_dis(0.0, s_noise);
+        double s_noise_value = s_dis(generator);
+        distance += s_noise_value;
+
+        distances.push_back(distance);
+    }
+
+    return distances;
 }
 
 void Robot::print_curr_pose()
@@ -52,7 +80,19 @@ void Robot::print_curr_pose()
     std::cout << "The Orientation is " << orientation << std::endl;
 }
 
-bool Robot::check_in_world_bounds(double new_x, double new_y, double new_orientation) {
+void Robot::print_curr_dis_to_landmarks()
+{
+    std::vector<double> landmark_dis = Robot::sense_landmarks();
+
+    std::cout << "The landmark distances.." << std::endl;
+    for(auto distance: landmark_dis)
+    {
+        std::cout << distance << std::endl;
+    }
+}
+
+bool Robot::check_in_world_bounds(double new_x, double new_y, double new_orientation)
+{
     if(new_x < 0 || new_x >= world_size)
     {
         throw std::invalid_argument("The X value is out of bound of the world defined!!");
