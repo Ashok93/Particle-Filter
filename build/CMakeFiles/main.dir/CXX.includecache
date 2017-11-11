@@ -1,0 +1,38 @@
+#IncludeRegexLine: ^[ 	]*#[ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/home/ashok/Desktop/Learning_Exercises/CPP/particle_filter/main.cpp
+iostream
+-
+string
+-
+vector
+-
+robot.h
+/home/ashok/Desktop/Learning_Exercises/CPP/particle_filter/robot.h
+
+/home/ashok/Desktop/Learning_Exercises/CPP/particle_filter/particle_filter.cpp
+
+/home/ashok/Desktop/Learning_Exercises/CPP/particle_filter/robot.cpp
+iostream
+-
+vector
+-
+string
+-
+math.h
+-
+robot.h
+/home/ashok/Desktop/Learning_Exercises/CPP/particle_filter/robot.h
+
+/home/ashok/Desktop/Learning_Exercises/CPP/particle_filter/robot.h
+iostream
+-
+vector
+-
+
