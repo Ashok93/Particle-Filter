@@ -12,6 +12,8 @@ Robot::Robot(double _x, double _y, double _orientation, int _world_size, std::ve
     orientation = _orientation;
     world_size = _world_size;
     landmarks = _landmarks;
+    srand (time(NULL));
+    generator.seed(rand()%100);
 }
 
 std::vector<double> Robot::get_pose()
