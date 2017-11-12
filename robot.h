@@ -21,7 +21,7 @@ public:
     void move(double turn, double forward);
 
     //sense the landmarks in the environment
-    std::vector<double> sense_landmarks();
+    std::vector<double> sense_landmarks(bool add_s_noise = true);
 
     //check if robot in bound of world. If not throw exception.
     bool check_in_world_bounds(double new_x, double new_y, double new_orientation);
@@ -39,13 +39,14 @@ private:
     double x;
     double y;
     double orientation;
+    const double PI  =3.141592653589793238463;
+public:
     double f_noise;
     double t_noise;
     double s_noise;
     int world_size;
     std::vector<std::vector<double>> landmarks;
     std::default_random_engine generator;
-    const double PI  =3.141592653589793238463;
 };
 
 #endif

@@ -55,7 +55,7 @@ void Robot::move(double turn, double forward)
     y = fmod(y, world_size);
 }
 
-std::vector<double> Robot::sense_landmarks()
+std::vector<double> Robot::sense_landmarks(bool add_s_noise)
 {
     std::vector<double> distances;
 
@@ -64,10 +64,13 @@ std::vector<double> Robot::sense_landmarks()
         double distance;
         distance = std::sqrt(std::pow(x-landmark[0], 2) + std::pow(y-landmark[1], 2));
 
-        // adding sensor noise
-        std::normal_distribution<double> s_dis(0.0, s_noise);
-        double s_noise_value = s_dis(generator);
-        distance += s_noise_value;
+        if(add_s_noise)
+        {
+            // adding sensor noise
+            std::normal_distribution<double> s_dis(0.0, s_noise);
+            double s_noise_value = s_dis(generator);
+            distance += s_noise_value;
+        }
 
         distances.push_back(distance);
     }
